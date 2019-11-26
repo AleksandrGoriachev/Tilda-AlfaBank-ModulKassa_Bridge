@@ -4,8 +4,6 @@ require_once "API/modulConnect.php";
 require_once "API/alfaConnect.php";
 require_once "API/dbConnect.php";
 
-const TIME_LIMIT = 90; //Period of time while money can be refunded to a customer in days
-
 //Connect to the database to check if there any uncompleted cheques
 $connect = new dbConnect();
 $mysqli = $connect->connect();

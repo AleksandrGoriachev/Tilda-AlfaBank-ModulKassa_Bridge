@@ -5,9 +5,6 @@ require_once "API/alfaConnect.php";
 require_once "API/modulConnect.php";
 
 
-// Describe the success URL
-$url = "";
-
 //Get orderId from bank's response after the payment
 $orderId = (string) $_GET['orderId'];
 
@@ -131,9 +128,9 @@ function chequeUpload($orderId, $taxMode = "SIMPLIFIED", $vatTag = "1105", $paym
 }
 
 //Proceed parsing, analysis, storage, fiscalization and redirect to a success page
-function successReturn ($orderId, $url) {
+function successReturn ($orderId) {
     // Prescribed success page on Tilda
-    $successUrl = $url;
+    $successUrl = SUCCESS_URL;
     if ($orderId === null) {
         echo "Order storage failed...";
         exit;
@@ -152,4 +149,4 @@ function successReturn ($orderId, $url) {
 
 
 //Now we process the "SUCCESS" response from ALfa
-successReturn(saveAlfaOrder($orderId), $url);
+successReturn(saveAlfaOrder($orderId));

@@ -21,4 +21,6 @@ define("MODUL_USER", "modul_user_name");  // UserName for the production or  dev
 define("MODUL_PASSWORD", "modul_access_password");   // Password for the production or development
 define("MODUL_TERMINAL", "modul_terminal");  // This parameter is being used only once per terminal connection to the Modul system
 
-
+//   Processing parameters
+define("TIME_LIMIT", 90); //Period of time while money can be refunded to a customer in days. Assigned in accordance with company rules
+define("SUCCESS_URL", "success_page_on_your_site"); //   Enter full URL of your success page
