@@ -3,18 +3,18 @@
 class dbConnect
 {
 
-    public $servername = "";
-    public $username = "";
-    public $password = "";
-    public $dbName = "";
+    protected $servername = "";
+    protected $username = "";
+    protected $password = "";
+    protected $dbName = "";
 
 // Create connection
     public function __construct()
     {
-        $this->servername;
-        $this->username;
-        $this->password;
-        $this->dbName;
+        $this->servername = DB_SERVER;
+        $this->username = DB_USER;
+        $this->password = DB_PASSWORD;
+        $this->dbName = DB_NAME;
     }
 
     public function connect () {

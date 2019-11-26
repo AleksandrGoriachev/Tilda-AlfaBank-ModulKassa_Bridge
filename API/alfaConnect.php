@@ -1,22 +1,17 @@
 <?php
 
-
-
 class alfaConnect
 {
-    const GET_ORDER_STATUS  = "getOrderStatus.do";
-    const GET_EXT_ORDER_STATUS = "getOrderStatusExtended.do";
-
     public $userName ="";
     public $password ="";
-    public $host = "";   //Production API
+    public $host = "";
 
     //    Constructor of the object
     public function __construct()
     {
-        $this->userName;
-        $this->password;
-        $this->host;
+        $this->userName = ALFA_USER;
+        $this->password = ALFA_PASSWORD;
+        $this->host = ALFA_SERVER;
     }
 
     // Get method for the password

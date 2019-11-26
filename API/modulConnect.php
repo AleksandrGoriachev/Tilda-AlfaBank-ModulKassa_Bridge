@@ -14,9 +14,10 @@ class modulConnect
     //    Constructor of the object
     public function __construct()
     {
-        $this->userName;
-        $this->password;
-        $this->host;
+        $this->userName = MODUL_USER;
+        $this->password = MODUL_PASSWORD;
+        $this->host = MODUL_SERVER;
+        $this->terminal = MODUL_TERMINAL;
     }
 
     // Get method for the password
@@ -147,33 +148,33 @@ public function uploadCheque ($data)
 
 
 
-//    //  This method is being used for the association only
-//    private function getAssociateHost()
-//    {
-//        return $this->associateHost;
-//    }
-//
-//
-//    //    Required once when you need to associate a new terminal to get login and pass
-//    public function associateTerminal()
-//    {
-//        $login = $this->getUserName();
-//        $password = $this->getPassword();
-//        $pair = $login . ":" . $password;
-//        $associateLink = $this->getAssociateHost() . $this->getTerminal();
-//        $curl = curl_init($associateLink);
-//        curl_setopt_array($curl, array(
-//            CURLOPT_HTTPAUTH => true,
-//            CURLAUTH_BASIC => true,
-//            CURLOPT_SSL_VERIFYPEER => false,
-//            CURLOPT_USERPWD => $pair,
-//            CURLOPT_CUSTOMREQUEST => "POST", // Use POST method
-//        ));
-//        $response = curl_exec($curl);
-//        if (!$response) {
-//            echo "Curl error:" . curl_error($curl);
-//        }
-//        echo json_decode($response);
-//        curl_close($curl);
-//    }
+    //  This method is being used for the association only
+    private function getAssociateHost()
+    {
+        return $this->associateHost;
+    }
+
+
+    //    Required once when you need to associate a new terminal to get login and pass
+    public function associateTerminal()
+    {
+        $login = $this->getUserName();
+        $password = $this->getPassword();
+        $pair = $login . ":" . $password;
+        $associateLink = $this->getAssociateHost() . $this->getTerminal();
+        $curl = curl_init($associateLink);
+        curl_setopt_array($curl, array(
+            CURLOPT_HTTPAUTH => true,
+            CURLAUTH_BASIC => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_USERPWD => $pair,
+            CURLOPT_CUSTOMREQUEST => "POST", // Use POST method
+        ));
+        $response = curl_exec($curl);
+        if (!$response) {
+            echo "Curl error:" . curl_error($curl);
+        }
+        echo json_decode($response);
+        curl_close($curl);
+    }
 }
