@@ -3,7 +3,8 @@
 require_once 'API/dbConnect.php';
 require_once "API/alfaConnect.php";
 require_once "API/modulConnect.php";
-
+require_once "API/Middleware/Logs.php";
+require_once "API/config.php";
 
 //Get orderId from bank's response after the payment
 $orderId = (string) $_GET['orderId'];
@@ -12,7 +13,9 @@ $orderId = (string) $_GET['orderId'];
 function saveAlfaOrder ($orderId) {
 // We call dependency from dbConnect
     if(strlen($orderId ) < 30) {
-        echo "Wrong order number length: " . strlen($orderId );
+        $error = "SaveAlfaOrder: Wrong order number length: " . strlen($orderId );
+        Logs::saveToLogs($error);
+
         return null;
     }
     $dbConn = new dbConnect();
@@ -20,7 +23,9 @@ function saveAlfaOrder ($orderId) {
 //    Store date to DB
     $mysqli->query("INSERT INTO `orders` (`id`, `orderId`) VALUES (NULL, '$orderId')");
     if ($mysqli->error) {
-        echo $mysqli->error;
+        $error = "SaveAlfaOrder storage error: " . $mysqli->error;
+        Logs::saveToLogs($error);
+
         $mysqli->close();
         return null;
     }
@@ -64,7 +69,9 @@ function orderUpdate($orderId) {
                           `email` = '$email',
                           `orderName` = '$orderName' WHERE orderId = '$orderId' LIMIT 1");
     if ($mysqli->error) {
-        echo $mysqli->error;
+        $error = "OrderUpdate: Storage error: " . $mysqli->error;
+        Logs::saveToLogs($error);
+
         $mysqli->close();
         return null;
     }
@@ -82,7 +89,9 @@ function chequeUpload($orderId, $taxMode = "SIMPLIFIED", $vatTag = "1105", $paym
     $query = $mysqli->query("SELECT * FROM orders WHERE `orderId` = '$orderId' LIMIT 1");
     $get = $query->fetch_array(MYSQLI_ASSOC);
     if ($mysqli->error) {
-        echo "Error reading orders table: " . $mysqli->error;
+        $error = "ChequeUpload: Error reading orders table: " . $mysqli->error;
+        Logs::saveToLogs($error);
+
         $mysqli->close();
         return null;
     }
@@ -119,7 +128,9 @@ function chequeUpload($orderId, $taxMode = "SIMPLIFIED", $vatTag = "1105", $paym
     $mysqli = $dbConn->connect();
     $mysqli->query("INSERT INTO `modul` (`id`, `idOrder`, `status`, `time`) VALUES (NULL, '$idOrder', '$status', '$time')");
     if ($mysqli->error) {
-        echo "Modul status storage in the database failed: " . $mysqli->error;
+        $error = "ChequeUpload: Modul status storage in the database failed: " . $mysqli->error;
+        Logs::saveToLogs($error);
+
         $mysqli->close();
         return null;
     }
@@ -132,7 +143,9 @@ function successReturn ($orderId) {
     // Prescribed success page on Tilda
     $successUrl = SUCCESS_URL;
     if ($orderId === null) {
-        echo "Order storage failed...";
+        $error = "successReturn: Order storage failed...";
+        Logs::saveToLogs($error);
+
         exit;
     }
     $update = orderUpdate($orderId);
@@ -141,7 +154,8 @@ function successReturn ($orderId) {
         if ($success === $orderId) {
         header("Location: " . $successUrl );
         } else {
-            echo "Entry update failed, sorry...";
+            $error = "successReturn: Entry update failed, sorry...";
+            Logs::saveToLogs($error);
             exit;
         }
     }

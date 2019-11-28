@@ -24,3 +24,6 @@ define("MODUL_TERMINAL", "modul_terminal");  // This parameter is being used onl
 //   Processing parameters
 define("TIME_LIMIT", 90); //Period of time while money can be refunded to a customer in days. Assigned in accordance with company rules
 define("SUCCESS_URL", "success_page_on_your_site"); //   Enter full URL of your success page
+
+//   Directory for logs storage
+define("LOG_DIR", __DIR__."/logs/");

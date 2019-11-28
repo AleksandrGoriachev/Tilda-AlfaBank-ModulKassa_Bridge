@@ -3,6 +3,8 @@
 require_once "API/modulConnect.php";
 require_once "API/alfaConnect.php";
 require_once "API/dbConnect.php";
+require_once "API/Middleware/Logs.php";
+require_once "API/config.php";
 
 //Connect to the database to check if there any uncompleted cheques
 $connect = new dbConnect();
@@ -27,11 +29,13 @@ if ($query->field_count !== 0) { // If we have any uncompleted order than...
         }
     }
 } else {
-    echo "There is no entries in DB 8(";
+    $error = "ChequeUpdate script: There is no entries in DB 8(";
+    Logs::saveToLogs($error);
 }
 // Return message if we have an error
 if ($mysqli->error) {
-    echo  "Error : " . $mysqli->error;
+    $error =  "ChequeUpdate script: Error : " . $mysqli->error;
+    Logs::saveToLogs($error);
 }
 $mysqli->close();
 
@@ -82,12 +86,16 @@ function chequeUpload($orderId, $taxMode = "SIMPLIFIED", $vatTag = "1105", $paym
     $query = $mysqli->query("SELECT * FROM orders WHERE `orderId` = '$orderId' LIMIT 1");
     $get = $query->fetch_array(MYSQLI_ASSOC);
     if ($mysqli->error) {
-        echo "Error reading orders table: " . $mysqli->error;
+        $error = "chequeUpload: Error reading orders table: " . $mysqli->error;
+        Logs::saveToLogs($error);
+
         $mysqli->close();
         return null;
     }
     if($get['orderStatus'] == 2) {
-        echo "We can't print return cheque without returning money from the bank account.\n";
+        $error = "chequeUpload: We can't print return cheque without returning money from the bank account.";
+        Logs::saveToLogs($error);
+
         return false;
     }
 //    Now we generate a new chequeId especially for ModulKassa
@@ -125,7 +133,9 @@ function chequeUpload($orderId, $taxMode = "SIMPLIFIED", $vatTag = "1105", $paym
     $mysqli = $dbConn->connect();
     $mysqli->query("INSERT INTO `returns` (`id`, `idOrder`, `status`, `time`, `chequeId`) VALUES (NULL, '$idOrder', '$status', '$time', '$chequeId')");
     if ($mysqli->error) {
-        echo "Modul status storage in the database failed: " . $mysqli->error;
+        $error = "chequeUpload: Modul status storage in the database failed: " . $mysqli->error;
+        Logs::saveToLogs($error);
+
         $mysqli->close();
         return null;
     }
@@ -168,11 +178,13 @@ if ($query->field_count > 0) { // If we have any uncompleted order than...
         }
     }
 } else {
-    echo "There is no entries in DB 8(";
+    $error = "checkUpdate in a row: There is no entries in DB 8(";
+    Logs::saveToLogs($error);
 }
 // Return message if we have an error
 if ($mysqli->error) {
-    echo  "Error : " . $mysqli->error;
+    $error = "checkUpdate in a row: Error : " . $mysqli->error;
+    Logs::saveToLogs($error);
 }
 $mysqli->close();
 
